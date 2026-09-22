@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetix - Advanced Crypto Trading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0; 
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #00ff88;
+            --secondary-color: #0a0a0a;
+            --accent-color: #7b61ff;
+            --background-color: #000000;
+            --card-color: #111111;
+            --text-color: #ffffff;
+            --text-secondary: #a0a0a0;
+            --success-color: #00ff88;
+            --danger-color: #ff3860;
+            --border-radius: 8px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .scale-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+            }
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--card-color);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+        } 
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #00cc6d;
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--background-color) 0%, var(--card-color) 100%);
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-text h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .trading-preview {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .trading-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #222222;
+        }
+
+        .trading-pair {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trading-pair img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .price-info {
+            text-align: right;
+        }
+
+        .current-price {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .price-change {
+            font-size: 14px;
+        }
+
+        .positive {
+            color: var(--success-color);
+        }
+
+        .negative {
+            color: var(--danger-color);
+        }
+
+        .chart-container {
+        height: 270px;
+        background: var(--card-color);
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+       }
+
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 15px;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid #222222;
+    }
+
+    .timeframes {
+        display: flex;
+        gap: 5px;
+    }
+
+    .timeframe-btn {
+        background: transparent;
+        border: 1px solid #333;
+        color: var(--text-secondary);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .timeframe-btn:hover {
+        background: rgba(0, 255, 136, 0.1);
+        color: var(--primary-color);
+    }
+
+    .timeframe-btn.active {
+        background: var(--primary-color);
+        color: var(--background-color);
+        border-color: var(--primary-color);
+    }
+
+    .chart-actions {
+        display: flex;
+        gap: 5px;
+    }
+
+    .chart-action-btn {
+        background: transparent;
+        border: 1px solid #333;
+        color: var(--text-secondary);
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 12px;
+    }
+
+    .chart-action-btn:hover {
+        background: rgba(0, 255, 136, 0.1);
+        color: var(--primary-color);
+    }
+
+    .chart-wrapper {
+        flex: 1;
+        position: relative;
+    }
+
+    .tradingview-widget-container {
+        height: 100%;
+        width: 100%;
+    }
+
+    #tradingview_chart {
+        height: 100%;
+        width: 100%;
+    }
+
+    .tradingview-widget-copyright {
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        font-size: 10px;
+        z-index: 10;
+    }
+
+    .tradingview-widget-copyright a {
+        color: var(--text-secondary);
+        text-decoration: none;
+    }
+
+    .blue-text {
+        color: #2962FF !important;
+    }
+
+        .trading-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .buy-btn {
+            background-color: var(--success-color);
+            color: var(--background-color);
+        }
+
+        .sell-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        /* Fast Execution Section */
+        .fast-execution {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--background-color) 0%, #0a0a0a 100%);
+        }
+
+        .execution-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+        }
+
+        .execution-text {
+            flex: 1;
+        }
+
+        .execution-text h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .execution-text h2 span {
+            color: var(--primary-color);
+        }
+
+        .execution-text p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .execution-feature {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: rgba(0, 255, 136, 0.05);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .execution-feature h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .execution-feature p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .execution-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .execution-visual {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .block-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .block {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--background-color);
+            position: relative;
+        }
+
+        .block::after {
+            content: '≤ 1';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .migration-sniper {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(123, 97, 255, 0.1);
+            border-radius: var(--border-radius);
+        }
+
+        .migration-sniper h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .migration-sniper p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Features Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features {
+            padding: 80px 0;
+            background-color: var(--background-color);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 136, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Rewards Section */
+        .rewards {
+            padding: 80px 0;
+            background-color: var(--card-color);
+        }
+
+        .rewards-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .rewards-main {
+            background-color: var(--background-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .rewards-header {
+            margin-bottom: 30px;
+        }
+
+        .rewards-header h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .sol-received {
+            background-color: rgba(0, 255, 136, 0.1);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .sol-received h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .sol-received p {
+            color: var(--text-secondary);
+        }
+
+        .key-terms {
+            margin-bottom: 30px;
+        }
+
+        .key-terms h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .term {
+            margin-bottom: 15px;
+        }
+
+        .term h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .term p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .progress-section {
+            margin-bottom: 30px;
+        }
+
+        .progress-section h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #222222;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 65%;
+            transition: width 1.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .work-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: rgba(0, 255, 136, 0.1);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .stat-card p {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .referrals {
+            background-color: var(--background-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .referrals h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .referral-levels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .referral-level {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: rgba(0, 255, 136, 0.05);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .referral-level:hover {
+            background-color: rgba(0, 255, 136, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .level-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .level-amount {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .level-percent {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .level-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--background-color);
+        }
+
+        .active-write {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(0, 255, 136, 0.1);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .active-write p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Markets Section */
+        .markets {
+            padding: 80px 0;
+            background-color: var(--background-color);
+        }
+
+        .markets-table {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 15px 20px;
+            background-color: #0a0a0a;
+            font-weight: 600;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 15px 20px;
+            border-bottom: 1px solid #222222;
+            transition: var(--transition);
+        }
+
+        .table-row:hover {
+            background-color: rgba(0, 255, 136, 0.05);
+        }
+
+        .coin {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .coin-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--card-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            color: var(--background-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #222222;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Auth Modal */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .auth-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .auth-container {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .auth-modal.active .auth-container {
+            transform: scale(1);
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid #222222;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .auth-form {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #222222;
+            border-radius: var(--border-radius);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember-me input {
+            width: auto;
+        }
+
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .auth-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .auth-submit:hover {
+            background-color: #00cc6d;
+        }
+
+        .auth-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 45%;
+            height: 1px;
+            background-color: #222222;
+        }
+
+        .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 45%;
+            height: 1px;
+            background-color: #222222;
+        }
+
+        .social-auth {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #222222;
+            border-radius: var(--border-radius);
+            background: none;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+
+        /* Price Update Animation */
+        .price-update {
+            animation: priceUpdate 0.5s ease;
+        }
+
+        @keyframes priceUpdate {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(0, 255, 136, 0.2); }
+            100% { background-color: transparent; }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+            }
+            
+            .hero-text {
+                text-align: center;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .rewards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .execution-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-text h1 {
+                font-size: 36px;
+            }
+            
+            .execution-text h2 {
+                font-size: 32px;
+            }
+            
+            .table-header, .table-row {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            
+            .table-header .hide-mobile,
+            .table-row .hide-mobile {
+                display: none;
+            }
+            
+            .referral-levels {
+                grid-template-columns: 1fr;
+            }
+        } 
+
+        @media (max-width: 576px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .work-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .social-auth {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-chart-line"></i>
+                Kinetix
+            </a>
+            
+            <nav class="nav-links">
+                <a href="#" class="active">Dashboard</a>
+                <a href="#">Markets</a>
+                <a href="#">Trade</a>
+                <a href="#">Portfolio</a>
+                <a href="#">Rewards</a>
+                <a href="#">Learn</a>
+            </nav>
+            
+            <div class="nav-actions">
+                <button class="btn btn-outline" id="loginBtn">Log In</button>
+                <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+            </div>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text fade-in">
+                <h1>Advanced Crypto <span>Trading</span> Made Simple</h1>
+                <p>Trade Bitcoin, Ethereum, and other cryptocurrencies with advanced tools, low fees, and deep liquidity. Join millions of traders on Kinetix.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary pulse">Start Trading</button>
+                    <button class="btn btn-outline">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="trading-preview scale-in">
+                    <div class="trading-header">
+                        <div class="trading-pair">
+                            <div class="coin-icon">
+                                <i class="fab fa-ethereum"></i>
+                            </div>
+                            <div>
+                                <div>ETH/USDT</div>
+                                <div class="text-secondary">Ethereum</div>
+                            </div>
+                        </div>
+                        <div class="price-info">
+                            <div class="current-price" id="ethPrice">Loading...</div>
+                            <div class="price-change positive" id="ethChange">Loading...</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+    <div class="chart-header">
+        <div class="timeframes">
+            <button class="timeframe-btn active">1H</button>
+            <button class="timeframe-btn">4H</button>
+            <button class="timeframe-btn">1D</button>
+            <button class="timeframe-btn">1W</button>
+        </div>
+        <div class="chart-actions">
+            <button class="chart-action-btn"><i class="fas fa-cog"></i></button>
+            <button class="chart-action-btn"><i class="fas fa-expand"></i></button>
+        </div>
+    </div>
+    <div class="chart-wrapper">
+        <!-- TradingView Widget -->
+        <div class="tradingview-widget-container">
+            <div id="tradingview_chart"></div>
+            <div class="tradingview-widget-copyright">
+                <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                    <span class="blue-text">Track all markets on TradingView</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+                    <div class="trading-actions">
+                        <div class="action-btn buy-btn">Buy</div>
+                        <div class="action-btn sell-btn">Sell</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fast Execution Section -->
+    <section class="fast-execution">
+        <div class="container execution-content">
+            <div class="execution-text slide-in-left">
+                <h2>Land in <span>≤ 1 Block</span></h2>
+                <p>Our limit order execution engine is the fastest in the market.</p>
+                <p>With our proprietary order execution engine and colocated nodes, our limit orders land in ≤ 1 block.</p>
+                
+                <div class="execution-feature">
+                    <h3>Migration Sniper</h3>
+                    <p>Advanced tools for detecting and executing on migration opportunities</p>
+                </div>
+            </div>
+            <div class="execution-image">
+                <div class="execution-visual scale-in">
+                    <h3>Ultra-Fast Execution</h3>
+                    <div class="block-visual">
+                        <div class="block">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                    </div>
+                    <p>Proprietary engine with colocated nodes ensures the fastest execution in the market</p>
+                    
+                    <div class="migration-sniper">
+                        <h4>Migration Sniper</h4>
+                        <p>Advanced tools for detecting and executing on migration opportunities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Why Trade With Kinetix?</h2>
+                <p>We provide everything you need for successful cryptocurrency trading</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Platform</h3>
+                    <p>Your funds and data are protected with bank-level security and advanced encryption technologies.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Execute trades in milliseconds with our high-performance matching engine and low-latency infrastructure.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3>Low Fees</h3>
+                    <p>Competitive trading fees with discounts for high-volume traders and Kinetix token holders.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Advanced Tools</h3>
+                    <p>Professional charting, technical indicators, and trading bots to enhance your strategy.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Trading</h3>
+                    <p>Trade on the go with our feature-rich mobile app available for iOS and Android.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our dedicated support team is available around the clock to assist with any issues.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rewards Section -->
+    <section class="rewards">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Earn Rewards</h2>
+                <p>Maximize your earnings with our reward programs</p>
+            </div>
+            <div class="rewards-container">
+                <div class="rewards-main slide-in-left">
+                    <div class="rewards-header">
+                        <h2>Rewards</h2>
+                        <p>Track your progress and earn more</p>
+                    </div>
+                    
+                    <div class="sol-received">
+                        <h3>0/2 SOL Received!</h3>
+                        <p>Trade more to earn rewards!</p>
+                    </div>
+                    
+                    <div class="key-terms">
+                        <h3>Key Terms</h3>
+                        <div class="term">
+                            <h4>Adorn Points</h4>
+                            <p>For the first Tuesday to bring attention and benefit.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="rewards-list">
+                        <h3>Rewards</h3>
+                        <p>Low RSA from training.</p>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <h3>Progress through the Rules</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Current: 65%</span>
+                            <span>Goal: 100%</span>
+                        </div>
+                        <p>Every sign means ready.</p>
+                    </div>
+                    
+                    <div class="work-stats">
+                        <div class="stat-card">
+                            <h4>Work</h4>
+                            <p>Last month</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Champion</h4>
+                            <p>All frames</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="referrals slide-in-right">
+                    <h3>Referrals</h3>
+                    <p>Environmental RSA: Training / Needs</p>
+                    
+                    <div class="referral-levels">
+                        <div class="referral-level">
+                            <div class="level-info">
+                                <div class="level-amount">1,000</div>
+                                <div class="level-percent">20%</div>
+                            </div>
+                            <div class="level-badge">1</div>
+                        </div>
+                        <div class="referral-level">
+                            <div class="level-info">
+                                <div class="level-amount">4,000</div>
+                                <div class="level-percent">10%</div>
+                            </div>
+                            <div class="level-badge">2</div>
+                        </div>
+                        <div class="referral-level">
+                            <div class="level-info">
+                                <div class="level-amount">3,000</div>
+                                <div class="level-percent">12%</div>
+                            </div>
+                            <div class="level-badge">3</div>
+                        </div>
+                        <div class="referral-level">
+                            <div class="level-info">
+                                <div class="level-amount">2,000</div>
+                                <div class="level-percent">13%</div>
+                            </div>
+                            <div class="level-badge">4</div>
+                        </div>
+                    </div>
+                    
+                    <div class="active-write">
+                        <p>Use your Message to help reinforce our benefits.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Markets Section -->
+    <section class="markets">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Top Cryptocurrencies</h2>
+                <p>Real-time prices for the most popular digital assets</p>
+            </div>
+            <div class="markets-table">
+                <div class="table-header">
+                    <div>Asset</div>
+                    <div>Price</div>
+                    <div>24h Change</div>
+                    <div class="hide-mobile">24h Volume</div>
+                    <div class="hide-mobile">Market Cap</div>
+                </div>
+                <div class="table-row fade-in" id="btcRow">
+                    <div class="coin">
+                        <div class="coin-icon">
+                            <i class="fab fa-bitcoin"></i>
+                        </div>
+                        <div>
+                            <div>Bitcoin</div>
+                            <div class="text-secondary">BTC</div>
+                        </div>
+                    </div>
+                    <div class="price" id="btcMarketPrice">Loading...</div>
+                    <div class="change positive" id="btcMarketChange">Loading...</div>
+                    <div class="hide-mobile volume" id="btcVolume">Loading...</div>
+                    <div class="hide-mobile market-cap" id="btcMarketCap">Loading...</div>
+                </div>
+                <div class="table-row fade-in" id="ethRow">
+                    <div class="coin">
+                        <div class="coin-icon">
+                            <i class="fab fa-ethereum"></i>
+                        </div>
+                        <div>
+                            <div>Ethereum</div>
+                            <div class="text-secondary">ETH</div>
+                        </div>
+                    </div>
+                    <div class="price" id="ethMarketPrice">Loading...</div>
+                    <div class="change positive" id="ethMarketChange">Loading...</div>
+                    <div class="hide-mobile volume" id="ethVolume">Loading...</div>
+                    <div class="hide-mobile market-cap" id="ethMarketCap">Loading...</div>
+                </div>
+                <div class="table-row fade-in" id="adaRow">
+                    <div class="coin">
+                        <div class="coin-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <div>Cardano</div>
+                            <div class="text-secondary">ADA</div>
+                        </div>
+                    </div>
+                    <div class="price" id="adaPrice">Loading...</div>
+                    <div class="change negative" id="adaChange">Loading...</div>
+                    <div class="hide-mobile volume" id="adaVolume">Loading...</div>
+                    <div class="hide-mobile market-cap" id="adaMarketCap">Loading...</div>
+                </div>
+                <div class="table-row fade-in" id="solRow">
+                    <div class="coin">
+                        <div class="coin-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div>
+                            <div>Solana</div>
+                            <div class="text-secondary">SOL</div>
+                        </div>
+                    </div>
+                    <div class="price" id="solPrice">Loading...</div>
+                    <div class="change positive" id="solChange">Loading...</div>
+                    <div class="hide-mobile volume" id="solVolume">Loading...</div>
+                    <div class="hide-mobile market-cap" id="solMarketCap">Loading...</div>
+                </div>
+                <div class="table-row fade-in" id="bnbRow">
+                    <div class="coin">
+                        <div class="coin-icon">
+                            <i class="fab fa-btc"></i>
+                        </div>
+                        <div>
+                            <div>Binance Coin</div>
+                            <div class="text-secondary">BNB</div>
+                        </div>
+                    </div>
+                    <div class="price" id="bnbPrice">Loading...</div>
+                    <div class="change positive" id="bnbChange">Loading...</div>
+                    <div class="hide-mobile volume" id="bnbVolume">Loading...</div>
+                    <div class="hide-mobile market-cap" id="bnbMarketCap">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container fade-in">
+            <h2>Ready to Start Trading?</h2>
+            <p>Join Kinetix today and experience the future of cryptocurrency trading with advanced tools and unmatched security.</p>
+            <button class="btn btn-primary pulse">Create Account</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column fade-in">
+                    <h3>Kinetix</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Advanced cryptocurrency trading platform for everyone.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column fade-in">
+                    <h3>Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Spot Trading</a></li>
+                        <li><a href="#">Margin Trading</a></li>
+                        <li><a href="#">Futures</a></li>
+                        <li><a href="#">Earn</a></li>
+                        <li><a href="#">Mobile App</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column fade-in">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Legal</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column fade-in">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">API Documentation</a></li>
+                        <li><a href="#">System Status</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Kinetix. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <button class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab">Log In</button>
+                <button class="auth-tab" id="signupTab">Sign Up</button>
+            </div>
+            
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                <button type="submit" class="auth-submit">Log In</button>
+                
+                <div class="auth-divider">or continue with</div>
+                
+                <div class="social-auth">
+                    <button type="button" class="social-btn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="social-btn">
+                        <i class="fab fa-apple"></i> Apple
+                    </button>
+                </div>
+                
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" id="switchToSignup">Sign up</a>
+                </div>
+            </form>
+            
+            <form class="auth-form" id="signupForm" style="display: none;">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <label for="agreeTerms">I agree to the <a href="#">Terms & Conditions</a></label>
+                    </div>
+                </div>
+                <button type="submit" class="auth-submit">Create Account</button>
+                
+                <div class="auth-divider">or continue with</div>
+                
+                <div class="social-auth">
+                    <button type="button" class="social-btn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="social-btn">
+                        <i class="fab fa-apple"></i> Apple
+                    </button>
+                </div>
+                
+                <div class="auth-switch">
+                    Already have an account? <a href="#" id="switchToLogin">Log in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="kinetix.js"></script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+</body>
+</html>
