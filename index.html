@@ -6,6 +6,10 @@
     <title>Kinetix - Advanced Crypto Trading</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         * {
             margin: 0;
             padding: 0; 
@@ -147,6 +151,18 @@
             color: var(--primary-color);
         }
 
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: 1;
+            margin-left: 40px;
+        }
+
+        .mobile-only-link {
+            display: none;
+        }
+
         .nav-links {
             display: flex;
             gap: 30px;
@@ -214,11 +230,23 @@
 
         .mobile-menu-btn {
             display: none;
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
             color: var(--text-color);
-            font-size: 24px;
+            width: 42px;
+            height: 42px;
+            font-size: 20px;
             cursor: pointer;
+            transition: var(--transition);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background: rgba(0, 255, 136, 0.1);
         }
 
         /* Hero Section */
@@ -976,7 +1004,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -984,6 +1014,9 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 20px 15px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .auth-modal.active {
@@ -992,14 +1025,36 @@
         }
 
         .auth-container {
+            position: relative;
             background-color: var(--card-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            transform: scale(0.9);
+            width: 100%;
+            max-width: 460px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            transform: scale(0.95);
             transition: transform 0.3s ease;
+            margin: auto;
+        }
+
+        .auth-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .auth-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 136, 0.3);
+            border-radius: 3px;
+        }
+
+        .auth-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
         }
 
         .auth-modal.active .auth-container {
@@ -1009,16 +1064,21 @@
         .auth-tabs {
             display: flex;
             border-bottom: 1px solid #222222;
+            position: sticky;
+            top: 0;
+            background-color: var(--card-color);
+            z-index: 10;
         }
 
         .auth-tab {
             flex: 1;
-            padding: 15px;
+            padding: 16px;
             text-align: center;
             background: none;
             border: none;
             color: var(--text-secondary);
             font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
             transition: var(--transition);
         }
@@ -1040,6 +1100,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            font-size: 14px;
         }
 
         .form-group input {
@@ -1065,21 +1126,41 @@
             align-items: center;
             margin-bottom: 20px;
             font-size: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .remember-me {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 8px;
         }
 
         .remember-me input {
-            width: auto;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-color);
+            margin-top: 2px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .remember-me label a {
+            color: var(--primary-color);
+            text-decoration: underline;
         }
 
         .forgot-password {
             color: var(--primary-color);
             text-decoration: none;
+            font-size: 13px;
         }
 
         .forgot-password:hover {
@@ -1088,12 +1169,13 @@
 
         .auth-submit {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background-color: var(--primary-color);
             color: var(--background-color);
             border: none;
             border-radius: var(--border-radius);
             font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
             transition: var(--transition);
         }
@@ -1107,6 +1189,7 @@
             margin: 20px 0;
             position: relative;
             color: var(--text-secondary);
+            font-size: 13px;
         }
 
         .auth-divider::before {
@@ -1114,7 +1197,7 @@
             position: absolute;
             top: 50%;
             left: 0;
-            width: 45%;
+            width: 42%;
             height: 1px;
             background-color: #222222;
         }
@@ -1124,20 +1207,20 @@
             position: absolute;
             top: 50%;
             right: 0;
-            width: 45%;
+            width: 42%;
             height: 1px;
             background-color: #222222;
         }
 
         .social-auth {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
         .social-btn {
             flex: 1;
-            padding: 10px;
+            padding: 11px;
             border: 1px solid #222222;
             border-radius: var(--border-radius);
             background: none;
@@ -1148,10 +1231,12 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-size: 14px;
         }
 
         .social-btn:hover {
             background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .auth-switch {
@@ -1173,18 +1258,26 @@
 
         .close-modal {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.06);
             border: none;
             color: var(--text-secondary);
-            font-size: 20px;
+            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: var(--transition);
+            z-index: 20;
         }
 
         .close-modal:hover {
             color: var(--text-color);
+            background: rgba(255, 255, 255, 0.16);
         }
 
         /* Price Update Animation */
@@ -1199,47 +1292,180 @@
         }
 
         /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .container {
+                width: 92%;
+            }
+        }
+
         @media (max-width: 992px) {
+            .hero {
+                padding: 60px 0;
+            }
+
             .hero-content {
                 flex-direction: column;
+                text-align: center;
+                gap: 40px;
             }
             
             .hero-text {
                 text-align: center;
+                max-width: 680px;
+                margin: 0 auto;
             }
             
             .hero-buttons {
                 justify-content: center;
             }
+
+            .hero-image {
+                width: 100%;
+                max-width: 520px;
+                margin: 0 auto;
+            }
             
             .rewards-container {
                 grid-template-columns: 1fr;
+                gap: 30px;
             }
             
             .execution-content {
                 flex-direction: column;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .execution-text {
+                max-width: 650px;
+                margin: 0 auto;
+            }
+
+            .execution-image {
+                width: 100%;
+                max-width: 480px;
+                margin: 0 auto;
             }
         }
 
         @media (max-width: 768px) {
-            .nav-links, .nav-actions {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(15, 15, 15, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+                padding: 24px 20px 30px;
+                flex-direction: column;
+                gap: 18px;
+                margin-left: 0;
+                display: flex;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 12px 16px;
+                font-size: 16px;
+                border-radius: var(--border-radius);
+                background: rgba(255, 255, 255, 0.03);
+            }
+
+            .nav-links a.active::after {
                 display: none;
             }
-            
-            .mobile-menu-btn {
+
+            .nav-actions {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+                margin-top: 10px;
+                padding-top: 16px;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .nav-actions .btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .mobile-only-link {
                 display: block;
             }
-            
+
             .hero-text h1 {
-                font-size: 36px;
+                font-size: 34px;
+            }
+
+            .hero-text p {
+                font-size: 16px;
+                margin-bottom: 24px;
             }
             
             .execution-text h2 {
-                font-size: 32px;
+                font-size: 30px;
+            }
+
+            .features {
+                padding: 60px 0;
+            }
+
+            .section-title {
+                margin-bottom: 35px;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 20px;
+            }
+
+            .rewards {
+                padding: 60px 0;
+            }
+
+            .rewards-header h2 {
+                font-size: 26px;
             }
             
+            .markets {
+                padding: 60px 0;
+            }
+
             .table-header, .table-row {
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1.5fr 1fr 1fr;
+                padding: 12px 15px;
             }
             
             .table-header .hide-mobile,
@@ -1249,28 +1475,287 @@
             
             .referral-levels {
                 grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .cta {
+                padding: 60px 0;
+            }
+
+            .cta h2 {
+                font-size: 28px;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
             }
         } 
 
         @media (max-width: 576px) {
-            .hero-buttons {
-                flex-direction: column;
+            .container {
+                width: 92%;
+            }
+
+            .hero {
+                padding: 40px 0;
+            }
+
+            .hero-text h1 {
+                font-size: 28px;
+                line-height: 1.25;
+                margin-bottom: 16px;
+            }
+
+            .hero-text p {
+                font-size: 15px;
+                line-height: 1.5;
             }
             
-            .btn {
+            .hero-buttons {
+                flex-direction: column;
+                gap: 12px;
                 width: 100%;
+            }
+            
+            .hero-buttons .btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .trading-preview {
+                padding: 15px 12px;
+            }
+
+            .chart-container {
+                height: 230px;
+                margin-bottom: 15px;
+            }
+
+            .chart-header {
+                padding: 6px 10px;
+            }
+
+            .timeframe-btn {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
+
+            .current-price {
+                font-size: 20px;
+            }
+
+            .price-change {
+                font-size: 12px;
+            }
+
+            .action-btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .fast-execution {
+                padding: 50px 0;
+            }
+
+            .execution-text h2 {
+                font-size: 26px;
+            }
+
+            .execution-text p {
+                font-size: 15px;
+            }
+
+            .execution-feature {
+                padding: 18px 15px;
+                margin-top: 25px;
+            }
+
+            .execution-feature h3 {
+                font-size: 18px;
+            }
+
+            .execution-visual {
+                padding: 20px 15px;
+            }
+
+            .block {
+                width: 65px;
+                height: 65px;
+                font-size: 15px;
+            }
+
+            .block::after {
+                font-size: 12px;
+                bottom: -20px;
+            }
+
+            .section-title h2 {
+                font-size: 24px;
             }
             
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .feature-card {
+                padding: 22px 18px;
+            }
+
+            .rewards-main, .referrals {
+                padding: 22px 18px;
+            }
+
+            .sol-received {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .sol-received h3 {
+                font-size: 20px;
             }
             
             .work-stats {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
-            
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-card p {
+                font-size: 20px;
+            }
+
+            .table-header, .table-row {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+
+            .coin {
+                gap: 8px;
+            }
+
+            .coin-icon {
+                width: 26px;
+                height: 26px;
+                font-size: 12px;
+            }
+
+            .coin div > div:first-child {
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .cta {
+                padding: 45px 0;
+            }
+
+            .cta h2 {
+                font-size: 24px;
+            }
+
+            .cta p {
+                font-size: 15px;
+                margin-bottom: 20px;
+            }
+
+            .cta .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-bottom {
+                padding-top: 20px;
+            }
+
+            /* Responsive Sign Up / Auth Modal */
+            .auth-modal {
+                padding: 12px 10px;
+            }
+
+            .auth-container {
+                width: 100%;
+                max-height: calc(100vh - 24px);
+                border-radius: 12px;
+            }
+
+            .auth-tabs {
+                padding: 0;
+            }
+
+            .auth-tab {
+                padding: 14px 10px;
+                font-size: 14px;
+            }
+
+            .auth-form {
+                padding: 20px 16px 24px;
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+
+            .form-group input {
+                padding: 11px 12px;
+                font-size: 16px;
+            }
+
             .social-auth {
                 flex-direction: column;
+                gap: 10px;
+            }
+
+            .social-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .container {
+                width: 94%;
+            }
+
+            .hero-text h1 {
+                font-size: 24px;
+            }
+
+            .table-header, .table-row {
+                padding: 8px 6px;
+                font-size: 12px;
+            }
+
+            .coin .text-secondary {
+                display: none;
+            }
+
+            .trading-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .price-info {
+                text-align: left;
             }
         }
     </style>
@@ -1284,38 +1769,40 @@
                 Kinetix
             </a>
             
-            <nav class="nav-links">
-                <a href="#" class="active">Dashboard</a>
-                <a href="#">Markets</a>
-                <a href="#">Trade</a>
-                <a href="#">Portfolio</a>
-                <a href="#">Rewards</a>
-                <a href="#">Learn</a>
-            </nav>
-            
-            <div class="nav-actions">
-                <button class="btn btn-outline" id="loginBtn">Log In</button>
-                <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+            <div class="nav-menu" id="navMenu">
+                <nav class="nav-links">
+                    <a href="#dashboard" class="active">Dashboard</a>
+                    <a href="#markets">Markets</a>
+                    <a href="#trade">Trade</a>
+                    <a href="#rewards">Rewards</a>
+                    <a href="#features">Features</a>
+                    <a href="signup.html" class="mobile-only-link">Sign Up Page</a>
+                </nav>
+                
+                <div class="nav-actions">
+                    <button class="btn btn-outline" id="loginBtn">Log In</button>
+                    <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                </div>
             </div>
             
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="dashboard">
         <div class="container hero-content">
             <div class="hero-text fade-in">
                 <h1>Advanced Crypto <span>Trading</span> Made Simple</h1>
                 <p>Trade Bitcoin, Ethereum, and other cryptocurrencies with advanced tools, low fees, and deep liquidity. Join millions of traders on Kinetix.</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary pulse">Start Trading</button>
-                    <button class="btn btn-outline">Learn More</button>
+                    <button class="btn btn-primary pulse" id="heroStartTrading">Start Trading</button>
+                    <a href="#features" class="btn btn-outline" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Learn More</a>
                 </div>
             </div>
-            <div class="hero-image">
+            <div class="hero-image" id="trade">
                 <div class="trading-preview scale-in">
                     <div class="trading-header">
                         <div class="trading-pair">
@@ -1368,7 +1855,7 @@
     </section>
 
     <!-- Fast Execution Section -->
-    <section class="fast-execution">
+    <section class="fast-execution" id="execution">
         <div class="container execution-content">
             <div class="execution-text slide-in-left">
                 <h2>Land in <span>≤ 1 Block</span></h2>
@@ -1400,7 +1887,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features">
+    <section class="features" id="features">
         <div class="container">
             <div class="section-title fade-in">
                 <h2>Why Trade With Kinetix?</h2>
@@ -1454,7 +1941,7 @@
     </section>
 
     <!-- Rewards Section -->
-    <section class="rewards">
+    <section class="rewards" id="rewards">
         <div class="container">
             <div class="section-title fade-in">
                 <h2>Earn Rewards</h2>
@@ -1553,7 +2040,7 @@
     </section>
 
     <!-- Markets Section -->
-    <section class="markets">
+    <section class="markets" id="markets">
         <div class="container">
             <div class="section-title fade-in">
                 <h2>Top Cryptocurrencies</h2>
@@ -1651,7 +2138,7 @@
         <div class="container fade-in">
             <h2>Ready to Start Trading?</h2>
             <p>Join Kinetix today and experience the future of cryptocurrency trading with advanced tools and unmatched security.</p>
-            <button class="btn btn-primary pulse">Create Account</button>
+            <button class="btn btn-primary pulse" id="ctaCreateAccount">Create Account</button>
         </div>
     </section>
 

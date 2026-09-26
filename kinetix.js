@@ -184,40 +184,51 @@
         setInterval(fetchCryptoData, 10000);
 
         // Mobile menu functionality
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-        const navActions = document.querySelector('.nav-actions');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn') || document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('navMenu');
         
-        mobileMenuBtn.addEventListener('click', () => {
-            const isVisible = navLinks.style.display === 'flex';
-            
-            if (isVisible) {
-                navLinks.style.display = 'none';
-                navActions.style.display = 'none';
-            } else {
-                navLinks.style.display = 'flex';
-                navActions.style.display = 'flex';
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '70px';
-                navLinks.style.left = '0';
-                navLinks.style.width = '100%';
-                navLinks.style.backgroundColor = 'var(--card-color)';
-                navLinks.style.padding = '20px';
-                navLinks.style.gap = '15px';
-                navLinks.style.boxShadow = 'var(--shadow)';
-                
-                navActions.style.flexDirection = 'column';
-                navActions.style.position = 'absolute';
-                navActions.style.top = '70px';
-                navActions.style.left = '0';
-                navActions.style.width = '100%';
-                navActions.style.backgroundColor = 'var(--card-color)';
-                navActions.style.padding = '20px';
-                navActions.style.gap = '15px';
-                navActions.style.marginTop = '180px';
-            }
-        });
+        if (mobileMenuBtn && navMenu) {
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = navMenu.classList.toggle('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    if (isOpen) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+
+            // Close mobile menu when clicking any nav link
+            const navLinksList = navMenu.querySelectorAll('.nav-links a');
+            navLinksList.forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target) && navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+        }
+
         // Add hover effects to buttons
         const buttons = document.querySelectorAll('.btn, .action-btn');
         buttons.forEach(button => {
@@ -252,6 +263,8 @@
         const authModal = document.getElementById('authModal');
         const loginBtn = document.getElementById('loginBtn');
         const signupBtn = document.getElementById('signupBtn');
+        const heroStartTrading = document.getElementById('heroStartTrading');
+        const ctaCreateAccount = document.getElementById('ctaCreateAccount');
         const closeModal = document.getElementById('closeModal');
         const loginTab = document.getElementById('loginTab');
         const signupTab = document.getElementById('signupTab');
@@ -260,61 +273,91 @@
         const switchToSignup = document.getElementById('switchToSignup');
         const switchToLogin = document.getElementById('switchToLogin');
         
-        // Open modal with login form
-        loginBtn.addEventListener('click', () => {
+        function openLoginModal() {
+            if (!authModal) return;
             authModal.classList.add('active');
-            loginTab.classList.add('active');
-            signupTab.classList.remove('active');
-            loginForm.style.display = 'block';
-            signupForm.style.display = 'none';
-        });
+            if (loginTab) loginTab.classList.add('active');
+            if (signupTab) signupTab.classList.remove('active');
+            if (loginForm) loginForm.style.display = 'block';
+            if (signupForm) signupForm.style.display = 'none';
+            document.body.style.overflow = 'hidden';
+            if (navMenu) navMenu.classList.remove('active');
+        }
+
+        function openSignupModal() {
+            if (!authModal) return;
+            authModal.classList.add('active');
+            if (signupTab) signupTab.classList.add('active');
+            if (loginTab) loginTab.classList.remove('active');
+            if (signupForm) signupForm.style.display = 'block';
+            if (loginForm) loginForm.style.display = 'none';
+            document.body.style.overflow = 'hidden';
+            if (navMenu) navMenu.classList.remove('active');
+        }
+
+        function closeAuthModal() {
+            if (!authModal) return;
+            authModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Open modal with login form
+        if (loginBtn) loginBtn.addEventListener('click', openLoginModal);
         
         // Open modal with signup form
-        signupBtn.addEventListener('click', () => {
-            authModal.classList.add('active');
-            signupTab.classList.add('active');
-            loginTab.classList.remove('active');
-            signupForm.style.display = 'block';
-            loginForm.style.display = 'none';
-        });
+        if (signupBtn) signupBtn.addEventListener('click', openSignupModal);
+        if (heroStartTrading) heroStartTrading.addEventListener('click', openSignupModal);
+        if (ctaCreateAccount) ctaCreateAccount.addEventListener('click', openSignupModal);
         
         // Close modal
-        closeModal.addEventListener('click', () => {
-            authModal.classList.remove('active');
-        });
+        if (closeModal) closeModal.addEventListener('click', closeAuthModal);
         
-        // Switch to signup form
-        switchToSignup.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupTab.classList.add('active');
-            loginTab.classList.remove('active');
-            signupForm.style.display = 'block';
-            loginForm.style.display = 'none';
+        // Close modal when clicking on backdrop
+        if (authModal) {
+            authModal.addEventListener('click', (e) => {
+                if (e.target === authModal) {
+                    closeAuthModal();
+                }
+            });
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && authModal && authModal.classList.contains('active')) {
+                closeAuthModal();
+            }
         });
+
+        // Check URL hash for modal opening
+        function checkHash() {
+            if (window.location.hash === '#signup') {
+                openSignupModal();
+            } else if (window.location.hash === '#login') {
+                openLoginModal();
+            }
+        }
+        window.addEventListener('load', checkHash);
+        window.addEventListener('hashchange', checkHash);
+
+        // Switch to signup form
+        if (switchToSignup) {
+            switchToSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                openSignupModal();
+            });
+        }
         
         // Switch to login form
-        switchToLogin.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginTab.classList.add('active');
-            signupTab.classList.remove('active');
-            loginForm.style.display = 'block';
-            signupForm.style.display = 'none';
-        });
+        if (switchToLogin) {
+            switchToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                openLoginModal();
+            });
+        }
         
         // Tab switching
-        loginTab.addEventListener('click', () => {
-            loginTab.classList.add('active');
-            signupTab.classList.remove('active');
-            loginForm.style.display = 'block';
-            signupForm.style.display = 'none';
-        });
-        
-        signupTab.addEventListener('click', () => {
-            signupTab.classList.add('active');
-            loginTab.classList.remove('active');
-            signupForm.style.display = 'block';
-            loginForm.style.display = 'none';
-        });
+        if (loginTab) loginTab.addEventListener('click', openLoginModal);
+        if (signupTab) signupTab.addEventListener('click', openSignupModal);
         
         // Form submission
         loginForm.addEventListener('submit', (e) => {
